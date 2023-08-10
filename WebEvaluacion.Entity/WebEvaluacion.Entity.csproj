@@ -46,6 +46,7 @@
     <Compile Include="EventosComisariosEntity.cs" />
     <Compile Include="EventosEntity.cs" />
     <Compile Include="EventosEquipamientosEntity.cs" />
+    <Compile Include="GeneralEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SedesEntity.cs" />
     <Compile Include="TipoComisariosEntity.cs" />

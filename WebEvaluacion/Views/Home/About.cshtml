@@ -1,7 +1,175 @@
 ﻿@{
-    ViewBag.Title = "About";
+    ViewBag.Title = "Tipos Complejos";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<p>Use this area to provide additional information.</p>
+
+
+<div class="card mt-2">
+
+    <div class="card-body">
+
+        <form action="/" method="post" id="frmregistro" class="row">
+
+            <div class="col-md-3">
+                <label for="">Tipo Complejo</label>
+                <input type="text" class="form-control form-control-sm" id="txttipocomplejo" required />
+            </div>
+
+            <div class="col-md-3">
+                <label for="">&nbsp;</label>
+                <button class="btn btn-sm btn-primary btn-block" type="submit">Guardar</button>
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+<div class="card mt-2">
+    <div class="card-body">
+
+        <table class="table table-bordered table-sm text-center">
+            <thead class="thead-light">
+                <tr>
+                    <th>Id</th>
+                    <th>Tipo Complejo</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyRegistros">
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section scripts {
+
+
+    <script>
+
+        const frmregistro = document.getElementById("frmregistro");
+        let idTipoComplejo = null;
+
+        // ANULAMOS
+        frmregistro.addEventListener('submit', (e) => {
+            e.preventDefault();
+            Registrar();
+        });
+
+        // CARGAMOS DATA
+        window.addEventListener('load', (e) => {
+            getData();
+        });
+
+        // REGISTRAR
+        function Registrar() {
+
+            let parametros = {
+                opcion: idTipoComplejo == null ? 1 : 2,
+                idTipoComplejo,
+                nombreTipoComplejo: $("#txttipocomplejo").val()
+            };
+
+            post('Home', 'MantTipoComplejo', parametros, true)
+                .then(response => {
+                    getData(response);
+                    frmregistro.reset();
+                    idTipoComplejo = null;
+                })
+        }
+
+        // LISTAR
+        function getData(data = false) {
+
+            let parametros =  {
+                opcion:3
+            }
+            if (!data) {
+                post('Home', 'MantTipoComplejo', parametros, true)
+                    .then(response => {
+                        setHtml(response);
+                    })
+            } else {
+                setHtml(data)
+            }
+
+
+        }
+
+        // ARMAR HTML
+        function setHtml(data) {
+            let tr = "";
+
+            for (let item of data) {
+
+                tr += `
+
+                        <tr>
+                            <td>${item.idTipoComplejo}</td>
+                            <td>${item.nombreTipoComplejo}</td>
+                            <td>
+                                <a href="#"
+                                        data-id="${item.idTipoComplejo}"
+                                        data-nombretipocomplejo="${item.nombreTipoComplejo}"
+                                        class="editar">
+                                    Editar
+                                </a>
+
+                                <a href="#"
+                                        data-id="${item.idTipoComplejo}"
+
+                                        class="eliminar" style="">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                    `;
+
+            }
+
+            $("#tbodyRegistros").html(tr);
+        }
+
+        // MODIFICAR
+        $("#tbodyRegistros").on('click', '.editar', function () {
+
+            idTipoComplejo = $(this).data("id");
+            let nombretipocomplejo = $(this).data("nombretipocomplejo");
+
+            $("#txttipocomplejo").val(nombretipocomplejo);
+
+        });
+
+        // ELIMINAR
+        $("#tbodyRegistros").on('click', '.eliminar', async function () {
+
+            if (confirm("Confirme para eliminar")) {
+
+                idTipoComplejo = $(this).data("id");
+
+
+                let parametros = {
+                    opcion: 4,
+                    idTipoComplejo
+                };
+
+                post('Home', 'MantTipoComplejo', parametros, true)
+                    .then(response => {
+                        getData(response);
+                        frmregistro.reset();
+                        idTipoComplejo = null;
+                    })
+
+            }
+
+        });
+
+    </script>
+
+}

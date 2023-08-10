@@ -1,17 +1,243 @@
 ﻿@{
-    ViewBag.Title = "Contact";
+    ViewBag.Title = "Complejos";
 }
-<h2>@ViewBag.Title.</h2>
-<h3>@ViewBag.Message</h3>
 
-<address>
-    One Microsoft Way<br />
-    Redmond, WA 98052-6399<br />
-    <abbr title="Phone">P:</abbr>
-    425.555.0100
-</address>
 
-<address>
-    <strong>Support:</strong>   <a href="mailto:Support@example.com">Support@example.com</a><br />
-    <strong>Marketing:</strong> <a href="mailto:Marketing@example.com">Marketing@example.com</a>
-</address>
+
+<div class="card mt-2">
+
+    <div class="card-body">
+
+        <form action="/" method="post" id="frmregistro" class="row">
+
+            <div class="col-md-3">
+                <label for="">Sede</label>
+                <select name="" id="cbosede" class="custom-select custom-select-sm"></select>
+                @*<input type="text" class="form-control form-control-sm" id="txttipocomplejo" required />*@
+            </div>
+
+            <div class="col-md-3">
+                <label for="">Tipo Complejo</label>
+                <select name="" id="cbotipocomplejo" class="custom-select custom-select-sm"></select>
+                @*<input type="text" class="form-control form-control-sm" id="txttipocomplejo" required />*@
+            </div>
+
+            <div class="col-md-3">
+                <label for="">Localizacion</label>
+                <input type="text" class="form-control form-control-sm" id="txtlocalizacion" required />
+            </div>
+
+            <div class="col-md-3">
+                <label for="">Jefe Organización</label>
+                <input type="text" class="form-control form-control-sm" id="txtjefeorganizacion" required />
+            </div>
+
+            <div class="col-md-3">
+                <label for="">Area Total Ocupada</label>
+                <input type="text" class="form-control form-control-sm" id="txtareatotalocupada" required />
+            </div>
+
+            <div class="col-md-3">
+                <label for="">&nbsp;</label>
+                <button class="btn btn-sm btn-primary btn-block" type="submit">Guardar</button>
+            </div>
+
+        </form>
+
+
+    </div>
+
+
+</div>
+
+
+<div class="card mt-2">
+    <div class="card-body">
+
+        <table class="table table-bordered table-sm text-center">
+            <thead class="thead-light">
+                <tr>
+                    <th>Id</th>
+                    <th>Sede</th>
+                    <th>Tipo Complejo</th>
+                    <th>Localización</th>
+                    <th>Jefe Organización</th>
+                    <th>Area Total Ocupada</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tbodyRegistros">
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section scripts {
+
+
+    <script>
+
+        async function getCombos() {
+
+            let responseSede = await post("Home", "MantSedes", { opcion: 3 },true);
+            let responseTipos = await post("Home", "MantTipoComplejo", { opcion: 3 },true);
+
+            // 
+            setComboSimple("cbosede", responseSede, "nombreSede", "idSede");
+            setComboSimple("cbotipocomplejo", responseTipos, "nombreTipoComplejo", "idTipoComplejo");
+
+
+
+        }
+
+
+        const frmregistro = document.getElementById("frmregistro");
+        let idComplejo = null;
+
+        // ANULAMOS
+        frmregistro.addEventListener('submit', (e) => {
+            e.preventDefault();
+            Registrar();
+        });
+
+        // CARGAMOS DATA
+        window.addEventListener('load', async (e) => {
+
+            await getCombos();
+            getData();
+        });
+
+        // REGISTRAR
+        function Registrar() {
+
+            let parametros = {
+                opcion: idComplejo == null ? 1 : 2,
+                idComplejo,
+                idSede: $("#cbosede").val(),
+                idTipoComplejo: $("#cbotipocomplejo").val(),
+                localizacion: $("#txtlocalizacion").val(),
+                jefeOrganizacion: $("#txtjefeorganizacion").val(),
+                areaTotalOcupada: $("#txtareatotalocupada").val(),
+
+            };
+
+            post('Home', 'MantComplejos', parametros, true)
+                .then(response => {
+                    getData(response);
+                    frmregistro.reset();
+                    idComplejo = null;
+                })
+        }
+
+        // LISTAR
+        function getData(data = false) {
+
+            let parametros =  {
+                opcion:3
+            }
+            if (!data) {
+                post('Home', 'MantComplejos', parametros, true)
+                    .then(response => {
+                        setHtml(response);
+                    })
+            } else {
+                setHtml(data)
+            }
+
+
+        }
+
+        // ARMAR HTML
+        function setHtml(data) {
+            let tr = "";
+
+            for (let item of data) {
+
+                tr += `
+
+                        <tr>
+                            <td>${item.idComplejo}</td>
+                            <td>${item.nombreSede}</td>
+                            <td>${item.nombreTipoComplejo}</td>
+                            <td>${item.localizacion}</td>
+                            <td>${item.jefeOrganizacion}</td>
+                            <td>${item.areaTotalOcupada}</td>
+
+
+                            <td>
+                                <a href="#"
+                                        data-id="${item.idComplejo}"
+                                        data-idsede="${item.idSede}"
+                                        data-idtipocomplejo="${item.idTipoComplejo}"
+                                        data-localizacion="${item.localizacion}"
+                                        data-jefeorganizacion="${item.jefeOrganizacion}"
+                                        data-areatotalocupada="${item.areaTotalOcupada}"
+
+                                        class="editar">
+                                    Editar
+                                </a>
+
+                                <a href="#"
+                                        data-id="${item.idComplejo}"
+
+                                        class="eliminar" style="">
+                                    Eliminar
+                                </a>
+                            </td>
+                        </tr>
+
+                    `;
+
+            }
+
+            $("#tbodyRegistros").html(tr);
+        }
+
+        // MODIFICAR
+        $("#tbodyRegistros").on('click', '.editar', function () {
+
+            idComplejo = $(this).data("id");
+            let idSede = $(this).data("idsede");
+            let idTipoComplejo = $(this).data("idtipocomplejo");
+            let localizacion = $(this).data("localizacion");
+            let jefeOrganizacion = $(this).data("jefeorganizacion");
+            let areaTotalOcupada = $(this).data("areatotalocupada");
+
+
+            $("#cbosede").val(idSede);
+            $("#cbotipocomplejo").val(idTipoComplejo);
+            $("#txtlocalizacion").val(localizacion);
+            $("#txtjefeorganizacion").val(jefeOrganizacion);
+            $("#txtareatotalocupada").val(areaTotalOcupada);
+
+
+        });
+
+        // ELIMINAR
+        $("#tbodyRegistros").on('click', '.eliminar', async function () {
+
+            if (confirm("Confirme para eliminar")) {
+
+                idComplejo = $(this).data("id");
+
+
+                let parametros = {
+                    opcion: 4,
+                    idComplejo
+                };
+
+                post('Home', 'MantComplejos', parametros, true)
+                    .then(response => {
+                        getData(response);
+                        frmregistro.reset();
+                        idComplejo = null;
+                    })
+
+            }
+
+        });
+
+    </script>
+
+}

@@ -4,41 +4,90 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - My ASP.NET Application</title>
+    @RenderSection("style", required: false)
+
     @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    @*@Scripts.Render("~/bundles/modernizr")*@
 
 </head>
 <body>
-    <div class="navbar navbar-inverse navbar-fixed-top">
-        <div class="container">
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+
+    @*<div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                </div>
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Sede", "Index", "Home")</li>
+                        <li>@Html.ActionLink("Tipos Complejos", "About", "Home")</li>
+                        <li>@Html.ActionLink("Complejps", "Contact", "Home")</li>
+                    </ul>
+                    @Html.Partial("_LoginPartial")
+                </div>
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>
-                @Html.Partial("_LoginPartial")
-            </div>
+        </div>*@
+
+
+    <nav class="navbar navbar-expand-lg navbar-light bg-light" id="navbarid">
+        <a class="navbar-brand" href="#">Eva</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                @*<li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>*@
+                <li class="nav-item">
+                    @Html.ActionLink("Sedes", "Index", "Home", null, new { @class = "nav-link" })
+                    @*<a class="nav-link" href="#">Features</a>*@
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("Tipos Complejos", "About", "Home", null, new { @class = "nav-link" })
+                    @*<a class="nav-link" href="#">Pricing</a>*@
+                </li>
+                <li class="nav-item">
+                    @Html.ActionLink("Complejos", "Contact", "Home", null, new { @class = "nav-link" })
+                    @*<a class="nav-link disabled">Disabled</a>*@
+                </li>
+            </ul>
+
+            @*<span class="navbar-text">
+            Salit
+        </span>*@
+
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="/login/CerrarSesion/">
+                        salir
+                    </a>
+                    
+                </li>
+
+            </ul>
         </div>
-    </div>
-    <div class="container body-content">
+    </nav>
+
+
+    <div class="container-fluid ">
         @RenderBody()
-        <hr />
-        <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
-        </footer>
+        @*<hr />
+            <footer>
+                <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            </footer>*@
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Admin/js/generales/ajax.js"></script>
+    <script src="~/Admin/js/generales/sweetalert2.admin.js"></script>
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

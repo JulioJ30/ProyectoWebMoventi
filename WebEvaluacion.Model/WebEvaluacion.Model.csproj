@@ -31,6 +31,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Dapper, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dapper.2.0.138\lib\net461\Dapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -41,8 +45,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ComplejoModel.cs" />
+    <Compile Include="SedesModel.cs" />
+    <Compile Include="TiposComplejosModel.cs" />
+    <Compile Include="UsuarioModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WebEvaluacion.Database\WebEvaluacion.Database.csproj">
+      <Project>{25de3a40-4e22-4f40-9bc8-81c241bf0055}</Project>
+      <Name>WebEvaluacion.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WebEvaluacion.Entity\WebEvaluacion.Entity.csproj">
+      <Project>{d187fb5c-9002-4459-b4c9-2d7c8ed99e8c}</Project>
+      <Name>WebEvaluacion.Entity</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

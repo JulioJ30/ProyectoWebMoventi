@@ -123,3 +123,9 @@ CREATE TABLE Usuarios
 	constraint		pk_idUsuario_usu		primary key(idUsuario),
 	constraint		uk_usuario_usu			unique(usuario)
 );
+
+
+-- INSERTAMOS
+select * from Usuarios
+insert into Usuarios (usuario,clave,nombreUsuario) values
+('admin','123','Administrador')

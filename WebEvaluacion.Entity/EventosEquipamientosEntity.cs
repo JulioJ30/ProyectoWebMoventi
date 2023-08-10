@@ -5,7 +5,7 @@ using System.Web;
 
 namespace WebEvaluacion.Entity
 {
-    public class EventosEquipamientosEntity
+    public class EventosEquipamientosEntity : GeneralEntity
     {
         public int idEventoEquipamiento { get; set; }
         public int idEquipamiento { get; set; }
